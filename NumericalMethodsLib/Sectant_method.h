@@ -7,15 +7,13 @@ class Sectant_method final :public Entity
 	{
 		return first_border - (first_border - second_border) * function(first_border) / (function(first_border) - function(second_border));
 	}
-	void solve(const double left_boundary, const double right_boundary,
-		const double precision, const std::function<double(double)> function,
-		const std::function<double(double)> derivative = nullptr) override;
+	void checkingFunctionExisting()override;
+	double solvingMethod() override;
 public:
-	explicit Sectant_method(const double left_boundary, const double right_boundary,
-		const double precision, const std::function<double(double)> function,
-		const std::function<double(double)> derivative = nullptr)
-		: Entity(left_boundary, right_boundary, precision, function, derivative)
+	explicit Sectant_method(const double left_boundary_, const double right_boundary_,
+		const double precision_, const std::function<double(double)>& function_)
+		: Entity(left_boundary_, right_boundary_, precision_, function_)
 	{
-		solve(left_boundary, right_boundary, precision, function, derivative);
+		solve();
 	}
 };

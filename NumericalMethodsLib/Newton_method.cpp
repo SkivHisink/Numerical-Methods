@@ -1,16 +1,20 @@
 #include "Newton_method.h"
 #include "NullPointerFunctionException.h"
-
-void Newton_method::solve(const double left_boundary, const double right_boundary,
-	const double precision, const std::function<double(double)> function,
-	const std::function<double(double)> derivative)
+const double Newton_method::give_random_number_from_interval(double left_boundary_, double right_boundary_)
 {
-	if (!initial_conditions_is_verified(left_boundary, right_boundary, precision)) {
-		return;
-	}
+	std::uniform_real_distribution<double> dist(left_boundary_, right_boundary_);
+	return dist(rand_engine);
+}
+
+void Newton_method::checkingFunctionExisting()
+{
 	if (function == nullptr || derivative == nullptr) {
 		throw NullPointerFunctionException();
 	}
+}
+
+double Newton_method::solvingMethod()
+{
 	double x_ = give_random_number_from_interval(left_boundary, right_boundary);
 	double prev_x_ = x_;
 	double f = function(x_);
@@ -29,5 +33,7 @@ void Newton_method::solve(const double left_boundary, const double right_boundar
 		f = function(x_);
 		prev_x_ = x_;
 	}
-	result = x_;
+	return x_;
 }
+
+
