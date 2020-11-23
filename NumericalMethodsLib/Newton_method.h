@@ -11,7 +11,5 @@ public:
 		const double precision_, const std::function<double(double)>& function_,
 		const std::function<double(double)>& derivative_)
 		: Entity(left_boundary_, right_boundary_, precision_, function_, derivative_)
-	{
-		solve();
-	}
+	{}
 };

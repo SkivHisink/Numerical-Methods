@@ -13,7 +13,5 @@ public:
 	explicit Sectant_method(const double left_boundary_, const double right_boundary_,
 		const double precision_, const std::function<double(double)>& function_)
 		: Entity(left_boundary_, right_boundary_, precision_, function_)
-	{
-		solve();
-	}
+	{}
 };

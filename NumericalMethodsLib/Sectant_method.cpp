@@ -17,6 +17,9 @@ double Sectant_method::solvingMethod()
 			break;
 		}
 		left = new_value_of_border(right, left, function);
+		if (right == left) {
+			break;
+		}
 		right = new_value_of_border(right, left, function);
 	}
 	return  right;

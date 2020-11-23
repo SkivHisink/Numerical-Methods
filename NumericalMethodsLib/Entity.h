@@ -21,9 +21,8 @@ protected:
 		return WRONG_SOLUTION;
 	}
 	const bool initial_conditions_is_verified();
-	void solve();
 public:
-	const double WRONG_SOLUTION = LDBL_MAX;
+
 
 	explicit Entity(const double left_boundary_, const double right_boundary_,
 		const double precision_, const std::function<double(double)>& function_,
@@ -36,4 +35,7 @@ public:
 		return result;
 	}
 
+	void solve();
+
+	const double WRONG_SOLUTION = LDBL_MAX;
 };

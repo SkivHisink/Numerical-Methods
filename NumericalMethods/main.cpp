@@ -25,7 +25,8 @@ int main()
 	std::function<double(double)> derative = value_of_derative_in_x;
 	Newton_method newton(a, b, precision, func, derative);
 	Sectant_method sectant(a, b, precision, func);
-
+	newton.solve();
+	sectant.solve();
 	std::cout << "Newton method solution is " << newton.get_result() << std::endl;
 	std::cout << "Sectant method solution is " << sectant.get_result() << std::endl;
 	return 0;
