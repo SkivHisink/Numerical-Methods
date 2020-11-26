@@ -142,12 +142,12 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Newton_method.h" />
     <ClInclude Include="NullPointerFunctionException.h" />
-    <ClInclude Include="Sectant_method.h" />
+    <ClInclude Include="Chord_method.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Newton_method.cpp" />
-    <ClCompile Include="Sectant_method.cpp" />
+    <ClCompile Include="Chord_method.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

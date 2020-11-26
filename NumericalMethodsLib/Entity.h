@@ -1,14 +1,12 @@
 #pragma once
 #include <functional>
-#include <random>
 
 class Entity
 {
 protected:
-	const size_t number_of_iteration = 100000;
-	std::random_device rand_device;
-	std::mt19937 rand_engine = std::mt19937(rand_device());
-	double result = WRONG_SOLUTION;
+	const size_t number_of_iteration = 1000000;
+
+	double result ;
 	const double left_boundary;
 	const double right_boundary;
 	const double precision;
@@ -16,11 +14,23 @@ protected:
 	const std::function<double(double)>& derivative;
 
 	virtual void checkingFunctionExisting() { }
-	virtual double solvingMethod()
+	virtual double solvingMethod(double& prev_res)
 	{
 		return WRONG_SOLUTION;
 	}
-	const bool initial_conditions_is_verified();
+	virtual double res_initial_value()
+	{
+		return WRONG_SOLUTION;
+	}
+	virtual  double prev_res_initial_value()
+	{
+		return 0.0;
+	}
+	bool is_valid();
+	virtual bool add_valid_cond()
+	{
+		return false;
+	}
 public:
 
 
@@ -28,14 +38,12 @@ public:
 		const double precision_, const std::function<double(double)>& function_,
 		const std::function<double(double)>& derivative_ = nullptr) :
 		left_boundary(left_boundary_), right_boundary(right_boundary_),
-		precision(precision_), function(function_), derivative(derivative_) {}
-
-	const double get_result()
+		precision(precision_), function(function_), derivative(derivative_)
 	{
-		return result;
+		result = WRONG_SOLUTION;
 	}
 
-	void solve();
+	const double solve();
 
-	const double WRONG_SOLUTION = LDBL_MAX;
+	const double WRONG_SOLUTION = nan("");
 };

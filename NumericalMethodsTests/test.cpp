@@ -1,252 +1,100 @@
 #include "pch.h"
 #include "Newton_method.h"
-#include "Sectant_method.h"
+#include "Chord_method.h"
 #include "NullPointerFunctionException.h"
 
-const double value_of_function_in_x_1(double x)
+double cube(double x)
 {
 	return powl(x, 3.0);
 }
 
-const double value_of_derative_in_x_1(double x)
+double derative_of_cube(double x)
 {
 	return 3 * powl(x, 2.0);
 }
 
-const double value_of_function_in_x_2(double x)
+double cube_plus_x_sinx(double x)
 {
 	return powl(x, 3.0) + x * sin(x);
 }
 
-const double value_of_derative_in_x_2(double x)
+double derative_cube_plus_x_sinx(double x)
 {
 	return 3 * powl(x, 2.0) + sin(x) + x * cos(x);
 }
 
-TEST(NEWTON_METHOD, Correct_function_1_similar_correct_intervals) {
-	double a = -100, b = 100;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = value_of_function_in_x_1;
-	std::function<double(double)> derative = value_of_derative_in_x_1;
-	Newton_method newton(a, b, precision, function, derative);
-	newton.solve();
-	EXPECT_TRUE(newton.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < newton.get_result());
+TEST(NEWTON, CubeCorrect) {
+	EXPECT_TRUE(abs(cube(0.0) - cube(Newton_method(-100, 100, 1e-8, cube, derative_of_cube).solve())) < 1e-8);
+	EXPECT_TRUE(abs(cube(0.0) - cube(Newton_method(-1, 1000, 1e-8, cube, derative_of_cube).solve())) < 1e-8);
+	EXPECT_TRUE(abs(cube(0.0) - cube(Newton_method(0, 1000, 1e-8, cube, derative_of_cube).solve())) < 1e-8);
+	EXPECT_TRUE(abs(cube(0.0) - cube(Newton_method(-102131, 0, 1e-8, cube, derative_of_cube).solve())) < 1e-8);
 }
 
-TEST(NEWTON_METHOD, Correct_function_1_not_similar_correct_intervals) {
-	double a = -1, b = 1000;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = value_of_function_in_x_1;
-	std::function<double(double)> derative = value_of_derative_in_x_1;
-	Newton_method newton(a, b, precision, function, derative);
-	newton.solve();
-	EXPECT_TRUE(newton.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < newton.get_result());
-}
-
-TEST(NEWTON_METHOD, Correct_function_1_left_interval_solution) {
-	double a = 0, b = 1000;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = value_of_function_in_x_1;
-	std::function<double(double)> derative = value_of_derative_in_x_1;
-	Newton_method newton(a, b, precision, function, derative);
-	newton.solve();
-	EXPECT_TRUE(newton.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < newton.get_result());
-}
-
-TEST(NEWTON_METHOD, Correct_function_1_right_interval_solution) {
-	double a = -102131, b = 0;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = value_of_function_in_x_1;
-	std::function<double(double)> derative = value_of_derative_in_x_1;
-	Newton_method newton(a, b, precision, function, derative);
-	newton.solve();
-	EXPECT_TRUE(newton.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < newton.get_result());
-}
-
-TEST(NEWTON_METHOD, Correct_function_2_correct_intervals_1st_root_interval)
+TEST(NEWTON, Cube_plus_x_sinxCorrect)
 {
-	double a = -0.5, b = 2.0;
-	double precision = 0.00000001;
-	double answer = 0.0;
-
-	const std::function<double(double)> function = value_of_function_in_x_2;
-	std::function<double(double)> derative = value_of_derative_in_x_2;
-	Newton_method newton(a, b, precision, function, derative);
-	newton.solve();
-	EXPECT_TRUE(newton.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < newton.get_result());
+	EXPECT_TRUE(abs(cube(0.0) - cube(Newton_method(-0.5, 2, 1e-8, cube_plus_x_sinx, derative_cube_plus_x_sinx).solve())) < 1e-7);
+	EXPECT_TRUE(abs(-0.876726215395062 - Newton_method(-22523.5, -0.5, 1e-8, cube_plus_x_sinx, derative_cube_plus_x_sinx).solve()) < 1e-7);
 }
 
-TEST(NEWTON_METHOD, Correct_function_2_incorrect_intervals_2_roots_in_intervals)
+TEST(NEWTON, Incorrect_interval_with_2_roots)
 {
-	double a = -22523.5, b = 58567.8;
-	double precision = 0.00000001;
 	double answer = -0.876726215395062;
 	double answer2 = 0.0;
-	const std::function<double(double)> function = value_of_function_in_x_2;
-	std::function<double(double)> derative = value_of_derative_in_x_2;
-	Newton_method newton(a, b, precision, function, derative);
-	newton.solve();
-	EXPECT_TRUE(newton.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < newton.get_result() ||
-		newton.get_result() < answer2 + precision * 10 &&
-		answer2 - precision * 10 < newton.get_result());
+	const std::function<double(double)> function = cube_plus_x_sinx;
+	std::function<double(double)> derative = derative_cube_plus_x_sinx;
+	double result = Newton_method(-22523.5, 58567.8, 1e-8, function, derative).solve();
+	EXPECT_TRUE(abs(function(result) - function(answer)) < 1e-8 || abs(function(result) - function(answer2)) < 1e-8);//Actually it's unhandled behavior
 }
 
-TEST(NEWTON_METHOD, Correct_function_2_correct_interval_2nd_root_interval)
-{
-	double a = -22523.5, b = -0.5;
-	double precision = 0.00000001;
-	double answer = -0.876726215395062;
-
-	const std::function<double(double)> function = value_of_function_in_x_2;
-	std::function<double(double)> derative = value_of_derative_in_x_2;
-	Newton_method newton(a, b, precision, function, derative);
-	newton.solve();
-	EXPECT_TRUE(newton.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < newton.get_result());
-}
-
-TEST(NEWTON_METHOD, InCorrect_function) {
-	double a = -100, b = 100;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = nullptr;
-	std::function<double(double)> derative = value_of_derative_in_x_1;
-	Newton_method newton(a, b, precision, function, derative);
+TEST(NEWTON, InCorrect_function) {
+	Newton_method newton(-100, 100, 1e-8, nullptr, derative_of_cube);
 	EXPECT_THROW(newton.solve(), NullPointerFunctionException);
 }
 
-TEST(NEWTON_METHOD, InCorrect_derative) {
-	double a = -100, b = 100;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = value_of_function_in_x_1;
-	std::function<double(double)> derative = nullptr;
-	Newton_method newton(a, b, precision, function, derative);
+TEST(NEWTON, InCorrect_derative) {
+	Newton_method newton(-100, 100, 1e-8, cube, nullptr);
 	EXPECT_THROW(newton.solve(), NullPointerFunctionException);
 }
 
-TEST(NEWTON_METHOD, InCorrect_derative_and_function) {
-	double a = -100, b = 100;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = nullptr;
-	std::function<double(double)> derative = nullptr;
-	Newton_method newton(a, b, precision, function, derative);
+TEST(NEWTON, InCorrect_derative_and_function) {
+	Newton_method newton(-100, 100, 1e-8, nullptr, nullptr);
 	EXPECT_THROW(newton.solve(), NullPointerFunctionException);
+
 }
 
-TEST(SECTANT_METHOD, Correct_function_1_similar_correct_intervals) {
-	double a = -100, b = 100;
-	double precision = 0.00000001;
-	double answer = 0;
+TEST(CHORD, CubeCorrect) {
+	EXPECT_TRUE(abs(cube(0.0) - cube(Chord_method(-100, 100, 1e-8, cube).solve())) < 1e-8);
+	EXPECT_TRUE(abs(cube(0.0) - cube(Chord_method(-1, 100, 1e-8, cube).solve())) < 1e-8);
 
-	const std::function<double(double)> function = value_of_function_in_x_1;
-	Sectant_method sectant(a, b, precision, function);
-	sectant.solve();
-	EXPECT_TRUE(sectant.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < sectant.get_result());
 }
-
-TEST(SECTANT_METHOD, Correct_function_1_not_similar_correct_intervals) {
-	double a = -1, b = 1000;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = value_of_function_in_x_1;
-	Sectant_method sectant(a, b, precision, function);
-	sectant.solve();
-	EXPECT_TRUE(sectant.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < sectant.get_result());
-}
-
-TEST(SECTANT_METHOD, Correct_function_1_left_interval_solution) {
-	double a = 0, b = 1000;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = value_of_function_in_x_1;
-	Sectant_method sectant(a, b, precision, function);
-	sectant.solve();
-	EXPECT_TRUE(sectant.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < sectant.get_result());
-}
-
-TEST(SECTANT_METHOD, Correct_function_1_right_interval_solution) {
-	double a = -102131, b = 0;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = value_of_function_in_x_1;
-	Sectant_method sectant(a, b, precision, function);
-	sectant.solve();
-	EXPECT_TRUE(sectant.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < sectant.get_result());
-}
-
-TEST(SECTANT_METHOD, Correct_function_2_correct_intervals_1st_root_interval)
+TEST(CHORD, CubeIncorrect)
 {
-	double a = -0.5, b = 200;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = value_of_function_in_x_2;
-	Sectant_method sectant(a, b, precision, function);
-	sectant.solve();
-	EXPECT_TRUE(sectant.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < sectant.get_result());
+	std::function<double(double)> cube_func = cube;
+	Chord_method chord(0, 1000, 1e-8, cube_func);
+	EXPECT_TRUE(std::isnan(chord.solve()));
+	Chord_method chord2(-102131, 0, 1e-8, cube_func);
+	EXPECT_TRUE(std::isnan(chord2.solve()));
 }
 
-TEST(SECTANT_METHOD, Correct_function_2_incorrect_interval_2_roots_in_interval)
+TEST(CHORD, Cube_plus_x_sinxCorrect)
 {
-	double a = -22523.5, b = 152.9;
-	double precision = 0.00000001;
-	double answer = -0.876726215395062;
-	double answer2 = 0.0;
-	const std::function<double(double)> function = value_of_function_in_x_2;
-	Sectant_method sectant(a, b, precision, function);
-	sectant.solve();
-	EXPECT_TRUE(sectant.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < sectant.get_result() ||
-		sectant.get_result() < answer2 + precision * 10 &&
-		answer2 - precision * 10 < sectant.get_result());
+
+	EXPECT_TRUE(abs(cube_plus_x_sinx(-0.876726215395062) - cube_plus_x_sinx(Chord_method(-25.5, -0.5, 1e-8,
+		cube_plus_x_sinx).solve())) < 1e-8);
 }
 
-TEST(SECTANT_METHOD, Correct_function_2_correct_interval_2nd_root_interval)
+TEST(CHORD, Incorrect_intervals)
 {
-	double a = -22523.5, b = -0.6;
-	double precision = 0.00000001;
-	double answer = -0.876726215395062;
-
-	const std::function<double(double)> function = value_of_function_in_x_2;
-	Sectant_method sectant(a, b, precision, function);
-	sectant.solve();
-	EXPECT_TRUE(sectant.get_result() < answer + precision * 10 &&
-		answer - precision * 10 < sectant.get_result());
+	const std::function<double(double)> function = cube_plus_x_sinx;
+	std::function<double(double)> derative = derative_cube_plus_x_sinx;
+	double result = Newton_method(-22523.5, 58567.8, 1e-8, function, derative).solve();
+	EXPECT_TRUE(abs(cube_plus_x_sinx(result) - cube_plus_x_sinx(-0.876726215395062)) < 1e-8 ||
+		abs(cube_plus_x_sinx(result) - cube_plus_x_sinx(0.0)) < 1e-8);//Actually it's unhandled behavior
+	Chord_method chord(-0.5, 2, 1e-8, function);
+	EXPECT_TRUE(std::isnan(chord.solve()));
 }
 
-TEST(SECTANT_METHOD, InCorrect_function) {
-	double a = -100, b = 100;
-	double precision = 0.00000001;
-	double answer = 0;
-
-	const std::function<double(double)> function = nullptr;
-	Sectant_method sectant(a, b, precision, function);
-	EXPECT_THROW(sectant.solve(), NullPointerFunctionException);
+TEST(CHORD, InCorrect_function) {
+	Chord_method chord(-100, 100, 1e-8, nullptr);
+	EXPECT_THROW(chord.solve(), NullPointerFunctionException);
 }

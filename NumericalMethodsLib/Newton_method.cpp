@@ -13,27 +13,19 @@ void Newton_method::checkingFunctionExisting()
 	}
 }
 
-double Newton_method::solvingMethod()
+double Newton_method::solvingMethod(double& prev_res)
 {
-	double x_ = give_random_number_from_interval(left_boundary, right_boundary);
-	double prev_x_ = x_;
-	double f = function(x_);
-	for (size_t i = 0; i < number_of_iteration; ++i) {
-		double g = derivative(x_);
-		if (g == 0.0) {
-			x_ = give_random_number_from_interval(left_boundary, right_boundary);
-			prev_x_ = x_;
-			f = function(x_);
-			continue;
-		}
-		x_ = x_ - f / g;
-		if (abs(x_ - prev_x_) < precision) {
-			break;
-		}
-		f = function(x_);
-		prev_x_ = x_;
+	double g = derivative(result);
+	if (g == 0.0) {
+		result = give_random_number_from_interval(left_boundary, right_boundary);
+		prev_res = -result;
+		return result;
 	}
-	return x_;
+	return (result - function(result) / g);
 }
 
+double Newton_method::res_initial_value()
+{
+	return give_random_number_from_interval(left_boundary, right_boundary);
+}
 
