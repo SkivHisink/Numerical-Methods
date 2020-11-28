@@ -1,31 +1,33 @@
 #include "Newton_method.h"
-#include "NullPointerFunctionException.h"
-const double Newton_method::give_random_number_from_interval(double left_boundary_, double right_boundary_)
-{
-	std::uniform_real_distribution<double> dist(left_boundary_, right_boundary_);
-	return dist(rand_engine);
-}
 
-void Newton_method::checkingFunctionExisting()
+
+bool Newton_method::is_valid()
 {
-	if (function == nullptr || derivative == nullptr) {
-		throw NullPointerFunctionException();
+	if (left_boundary > right_boundary || precision > 1 || precision < 0 ||
+		left_boundary == right_boundary || function == nullptr || derivative == nullptr) {
+		return false;
 	}
+	return true;
 }
 
-double Newton_method::solvingMethod(double& prev_res)
+double Newton_method::get_next_value(double current)
 {
-	double g = derivative(result);
+	double x = current;
+	double g = derivative(x);
 	if (g == 0.0) {
-		result = give_random_number_from_interval(left_boundary, right_boundary);
-		prev_res = -result;
-		return result;
+		x = middle_of_interval(left_boundary, right_boundary);
+		return x;
 	}
-	return (result - function(result) / g);
+	return (x - function(x) / g);
+}
+double Newton_method::middle_of_interval(const double left_boundary_, const double right_boundary_)
+{
+	split_ratio += 2;
+	return  right_boundary_ - (right_boundary_ - left_boundary_) / split_ratio;
 }
 
-double Newton_method::res_initial_value()
+double Newton_method::get_initial_value()
 {
-	return give_random_number_from_interval(left_boundary, right_boundary);
+	return middle_of_interval(left_boundary, right_boundary);
 }
 

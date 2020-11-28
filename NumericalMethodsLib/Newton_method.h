@@ -1,14 +1,15 @@
 #pragma once
 #include "Entity.h"
-#include <random>
+
 class Newton_method final :public Entity
 {
-	std::random_device rand_device;
-	std::mt19937 rand_engine = std::mt19937(rand_device());
-	const double give_random_number_from_interval(double left_boundary_, double right_boundary_);
-	void checkingFunctionExisting()override;
-	double res_initial_value() override;
-	double solvingMethod(double& prev_res) override;
+	double split_ratio = 0;
+	
+	double middle_of_interval(const double left_boundary_, const double right_boundary_);
+	
+	bool is_valid()override;
+	double get_initial_value() override;
+	double get_next_value(double current) override;
 public:
 	explicit Newton_method(const double left_boundary_, const double right_boundary_,
 		const double precision_, const std::function<double(double)>& function_,

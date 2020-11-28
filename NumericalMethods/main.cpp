@@ -4,12 +4,12 @@
 #include "Newton_method.h"
 #include  "Chord_method.h"
 
-const double cube(double x)
+double cube(double x)
 {
 	return powl(x, 3.0);
 }
 
-const double derative_of_cube(double x)
+double derative_of_cube(double x)
 {
 	return 3 * powl(x, 2.0);
 }

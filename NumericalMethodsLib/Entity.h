@@ -6,7 +6,6 @@ class Entity
 protected:
 	const size_t number_of_iteration = 1000000;
 
-	double result ;
 	const double left_boundary;
 	const double right_boundary;
 	const double precision;
@@ -14,20 +13,15 @@ protected:
 	const std::function<double(double)>& derivative;
 
 	virtual void checkingFunctionExisting() { }
-	virtual double solvingMethod(double& prev_res)
+	virtual double get_next_value(double current)
 	{
 		return WRONG_SOLUTION;
 	}
-	virtual double res_initial_value()
+	virtual double get_initial_value()
 	{
 		return WRONG_SOLUTION;
 	}
-	virtual  double prev_res_initial_value()
-	{
-		return 0.0;
-	}
-	bool is_valid();
-	virtual bool add_valid_cond()
+	virtual bool is_valid()
 	{
 		return false;
 	}
@@ -40,10 +34,9 @@ public:
 		left_boundary(left_boundary_), right_boundary(right_boundary_),
 		precision(precision_), function(function_), derivative(derivative_)
 	{
-		result = WRONG_SOLUTION;
 	}
 
-	const double solve();
+	 double solve();
 
 	const double WRONG_SOLUTION = nan("");
 };
