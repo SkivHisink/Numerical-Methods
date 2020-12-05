@@ -25,6 +25,7 @@ protected:
 	{
 		return false;
 	}
+	virtual bool check_result(double current, double previous);
 public:
 
 
@@ -36,7 +37,6 @@ public:
 	{
 	}
 
-	 double solve();
-
+	double solve();
 	const double WRONG_SOLUTION = nan("");
 };

@@ -141,7 +141,6 @@
   <ItemGroup>
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Newton_method.h" />
-    <ClInclude Include="NullPointerFunctionException.h" />
     <ClInclude Include="Chord_method.h" />
   </ItemGroup>
   <ItemGroup>

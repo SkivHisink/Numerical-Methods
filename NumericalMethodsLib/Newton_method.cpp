@@ -1,11 +1,16 @@
 #include "Newton_method.h"
-
+#include <cmath>
 
 bool Newton_method::is_valid()
 {
 	if (left_boundary > right_boundary || precision > 1 || precision < 0 ||
 		left_boundary == right_boundary || function == nullptr || derivative == nullptr) {
 		return false;
+	}
+	double f_l = function(left_boundary);
+	double f_r = function(right_boundary);
+	if (std::isnan(f_l) || std::isnan(f_r) || f_l * f_r > 0) {
+		return  false;
 	}
 	return true;
 }
@@ -14,7 +19,7 @@ double Newton_method::get_next_value(double current)
 {
 	double x = current;
 	double g = derivative(x);
-	if (g == 0.0) {
+	if (abs(g) < 1e-20) {
 		x = middle_of_interval(left_boundary, right_boundary);
 		return x;
 	}

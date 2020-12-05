@@ -1,27 +1,32 @@
 #include "Chord_method.h"
+#include <cmath>
+
+bool Chord_method::check_result(double current, double previous)
+{
+	return abs(function(current)) < precision;
+}
 
 double Chord_method::get_next_value(double current)
 {
-	return  new_value_of_border(current, function);
-}
+	double f = function(current);
+	return current - (current - left_boundary) * f / (f - func_left_value);
 
-double Chord_method::new_value_of_border(const double first_border, const std::function<double(double)> function)
-{
-	double f = function(first_border);
-	return first_border - (first_border - left_boundary) * f / (f - func_left_value);
 }
 
 double Chord_method::get_initial_value()
 {
-	func_left_value = function(left_boundary);
 	return right_boundary;
 }
 
 bool Chord_method::is_valid()
 {
-	if (left_boundary > right_boundary || precision > 1 || precision < 0|| 
-		left_boundary == right_boundary || function == nullptr || 
-		function(left_boundary) * function(right_boundary) >= 0) {
+	if (left_boundary > right_boundary || precision > 1 ||
+		precision < 0 || left_boundary - right_boundary >1e-20 ||
+		right_boundary - left_boundary < -1e-20 || function == nullptr) {
+		return false;
+	}
+	func_left_value = function(left_boundary);
+	if (std::isnan(func_left_value) || func_left_value * function(right_boundary) >= 0) {
 		return false;
 	}
 	return true;
