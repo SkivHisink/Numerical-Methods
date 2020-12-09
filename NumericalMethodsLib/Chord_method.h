@@ -4,7 +4,7 @@
 class Chord_method final :public Entity
 {
 	double func_left_value = WRONG_SOLUTION;
-	
+	double func = 0.0;
 	double get_initial_value() override;
 	double get_next_value(double current) override;
 	bool is_valid() override;

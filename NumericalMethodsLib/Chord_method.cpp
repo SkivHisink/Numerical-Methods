@@ -3,18 +3,18 @@
 
 bool Chord_method::check_result(double current, double previous)
 {
-	return abs(function(current)) < precision;
+	func = function(current);
+	return abs(func) < precision;
 }
 
 double Chord_method::get_next_value(double current)
 {
-	double f = function(current);
-	return current - (current - left_boundary) * f / (f - func_left_value);
-
+	return current - (current - left_boundary) * func / (func - func_left_value);
 }
 
 double Chord_method::get_initial_value()
 {
+	func = function(right_boundary);
 	return right_boundary;
 }
 
